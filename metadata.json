@@ -1,0 +1,5 @@
+{
+  "name": "보결 업무 관리 시스템",
+  "description": "담임교사 병가 시 수업 대체 교사를 배정하고 기록을 관리하는 시스템입니다. Firebase 연동 및 이미지 저장 기능을 포함합니다.",
+  "requestFramePermissions": []
+}
