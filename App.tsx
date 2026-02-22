@@ -14,13 +14,26 @@ import { CaptureContent } from './components/CaptureContent';
 // Declare html2canvas globally as it is loaded via CDN
 declare const html2canvas: any;
 
+const TEACHERS_5TH_GRADE: Record<string, string> = {
+  '1': '손병두',
+  '2': '손지환',
+  '3': '박희열',
+  '4': '은수빈',
+  '5': '노기승',
+  '6': '지유진',
+  '7': '김재훈',
+  '8': '임승진',
+  '9': '윤종욱',
+  '10': '유재홍'
+};
+
 function App() {
   // --- State Management ---
   const [user, setUser] = useState<FirebaseUser | null>(null);
   
   // Form State
-  const [absentTeacher, setAbsentTeacher] = useState('');
-  const [grade, setGrade] = useState('6'); // Default to 6
+  const [absentTeacher, setAbsentTeacher] = useState('손병두');
+  const [grade, setGrade] = useState('5'); // Default to 5
   const [classNum, setClassNum] = useState('1');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [schedule, setSchedule] = useState<ScheduleItem[]>(INITIAL_SCHEDULE_HIGH);
@@ -69,6 +82,20 @@ function App() {
       setSchedule(JSON.parse(JSON.stringify(INITIAL_SCHEDULE_MID)));
     } else {
       setSchedule(JSON.parse(JSON.stringify(INITIAL_SCHEDULE_HIGH)));
+    }
+    
+    // Update teacher if switching to 5th grade (though currently only 5 is available)
+    if (newGrade === '5' && TEACHERS_5TH_GRADE[classNum]) {
+      setAbsentTeacher(TEACHERS_5TH_GRADE[classNum]);
+    } else {
+      setAbsentTeacher('');
+    }
+  };
+
+  const handleClassChange = (newClass: string) => {
+    setClassNum(newClass);
+    if (grade === '5' && TEACHERS_5TH_GRADE[newClass]) {
+      setAbsentTeacher(TEACHERS_5TH_GRADE[newClass]);
     }
   };
 
@@ -420,17 +447,17 @@ function App() {
                     onChange={(e) => handleGradeChange(e.target.value)} 
                     className="bg-transparent border-none outline-none text-white font-bold cursor-pointer [&>option]:text-slate-800"
                   >
-                    {[4,5,6].map(g => <option key={g} value={g}>{g}학년</option>)}
+                    <option value="5">5학년</option>
                   </select>
                   
                   <div className="w-[1px] h-4 bg-white/20 mx-1"></div>
                   
                   <select 
                     value={classNum} 
-                    onChange={(e) => setClassNum(e.target.value)} 
+                    onChange={(e) => handleClassChange(e.target.value)} 
                     className="bg-transparent border-none outline-none text-white font-bold cursor-pointer [&>option]:text-slate-800"
                   >
-                    {[1,2,3,4,5,6,7,8,9,10,11].map(c => <option key={c} value={c}>{c}반</option>)}
+                    {[1,2,3,4,5,6,7,8,9,10].map(c => <option key={c} value={c}>{c}반</option>)}
                   </select>
                   
                   <div className="w-[1px] h-4 bg-white/20 mx-1"></div>
